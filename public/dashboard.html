@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EH-Cure51-File-Viewer Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .project { background: #f4f4f4; padding: 15px; margin-bottom: 10px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Project Tracker</h1>
+        <div id="userInfo"></div>
+    </header>
+
+    <div id="projectList">
+        <div class="project">
+            <h3>Project 1</h3>
+            <p>Status: In Progress</p>
+        </div>
+        <div class="project">
+            <h3>Project 2</h3>
+            <p>Status: Completed</p>
+        </div>
+        <div class="project">
+            <h3>Project 3</h3>
+            <p>Status: Not Started</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (user) {
+                document.getElementById('userInfo').innerHTML = `
+                    <p>Welcome, ${user.userPrincipalName || 'User'}!</p>
+                    <button onclick="logout()">Logout</button>
+                `;
+            } else {
+                window.location.href = '/index.html';
+            }
+        });
+
+        function logout() {
+            localStorage.removeItem('user');
+            window.location.href = '/index.html';
+        }
+    </script>
+</body>
+</html>
