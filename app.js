@@ -1,3 +1,4 @@
+const { fork } = require('child_process')
 const { authenticate } = require('ldap-authentication')
 const express = require('express')
 const bodyParser = require('body-parser')
@@ -7,13 +8,31 @@ const port = 3000
 app.use(bodyParser.json({ type: 'application/json' }))
 app.use(express.static('public'))
 
+function isObject(obj) {
+  return typeof obj === 'function' || typeof obj === 'object';
+}
+
+function merge(target, source) {
+  for (let key in source) {
+    if (isObject(target[key]) && isObject(source[key])) {
+      merge(target[key], source[key]);
+    } else {
+      target[key] = source[key];
+    }
+  }
+  return target;
+}
+
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/index.html')
 })
 
 app.post('/authenticate', async (req, res) => {
   const user = {}
-  Object.assign(user, req.body)
+  merge(user, req.body)
+
+  const logProcess = fork('./logAuth.js')
+  logProcess.send({ username: user.username, ipAddress: req.ip })
 
   if (!user.username || !user.password) {
     return res.status(400).send('Missing username or password')
