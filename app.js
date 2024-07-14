@@ -1,9 +1,16 @@
 const { fork } = require('child_process')
 const { authenticate } = require('ldap-authentication')
+const https = require('https')
+const fs = require('fs')
 const express = require('express')
 const bodyParser = require('body-parser')
 const app = express()
 const port = 3000
+
+const options = {
+    key: fs.readFileSync('keys/private.key'),
+    cert: fs.readFileSync('keys/certificate.crt'),
+}
 
 app.use(bodyParser.json({ type: 'application/json' }))
 app.use(express.static('public'))
@@ -40,7 +47,7 @@ app.post('/authenticate', async (req, res) => {
 
   let options = {
     ldapOpts: {
-      url: 'ldap://192.168.0.15',
+      url: 'ldap://10.0.0.5',
     },
     userDn: `cn=${user.username},cn=users,dc=cure51,dc=com`,
     userPassword: user.password,
@@ -58,6 +65,4 @@ app.post('/authenticate', async (req, res) => {
   }
 })
 
-app.listen(port, () => {
-  console.log(`Listening on port ${port}`)
-})
+https.createServer(options, app).listen(443)
