@@ -14,6 +14,10 @@ second year curriculum.
 5. Build the container using `docker build -t cure51 .`
 6. Run the container with `docker run -p 443:443 cure51`
 
+The folder structure should look similar to this:
+
+![folder structure](public/struct.png)
+
 ## Running the Exploit
 
 1. Deploy a reverse shell on your computer via `nc -lvnp PORT`
