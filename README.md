@@ -38,8 +38,11 @@ server then merges **all** the properties with an
 empty object, giving rise to a prototype pollution
 vulnerability.
 
-The code also calls `fork`, and paired with the
-prototype pollution vulnerability, allows for any
-attacker to achieve RCE on the webserver with reference
-to [this](https://book.hacktricks.xyz/pentesting-web/deserialization/nodejs-proto-prototype-pollution/prototype-pollution-to-rce)
-guide.
+The code calls `fork`, which contains the line of code
+shown above. When combined with the prototype pollution
+vulnerability, it allows an attacker to achieve RCE on
+the webserver by overwriting special variables that
+allow for arbitrary code execution. Refer to
+[this](https://book.hacktricks.xyz/pentesting-web/deserialization/nodejs-proto-prototype-pollution/prototype-pollution-to-rce)
+guide and a Google search on prototype pollution
+vulnerabilities for a more detailed explanation.
